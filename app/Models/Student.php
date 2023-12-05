@@ -62,7 +62,7 @@ class Student extends Model
     {
         return $this->hasMany(Performance::class);
     }
-
+   
     public function merits()
     {
         return $this->performances()->where('type', 'merit');
@@ -72,8 +72,7 @@ class Student extends Model
     {
         return $this->performances()->where('type', 'demerit');
     }
-  
-  
+    
   
     // ============================== Accessor & Mutator ==========================================
 

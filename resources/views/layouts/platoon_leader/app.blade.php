@@ -59,7 +59,7 @@
                                     Platoon Management
                                 </span>
                             </a>
-                            <div class="collapse @if (Route::is('platoon_leader.students.*') || Route::is('platoon_leader.meritanddemerit.*') || Route::is('platoon_leader.studentsgrades.*') || Route::is('platoon_leader.performances.*') || Route::is('platoon_leader.attendance_records.*')) show @endif"
+                            <div class="collapse @if (Route::is('platoon_leader.students.*') || Route::is('platoon_leader.meritanddemerit.*') || Route::is('platoon_leader.studentsgrades.*') || Route::is('platoon_leader.performances.*') || Route::is('platoon_leader.attendance-records.*')) show @endif"
                                 id="to_student_management">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
@@ -75,8 +75,8 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link @if (Route::is('platoon_leader.attendance_records.*')) text-primary @endif"
-                                            href="{{ route('platoon_leader.attendance_records.index') }}">
+                                        <a class="nav-link @if (Route::is('platoon_leader.attendance-records.*')) text-primary @endif"
+                                            href="{{ route('platoon_leader.attendance-records.index') }}">
                                             <span class="nav-link-text">Attendance Record</span>
                                         </a>
                                     </li>

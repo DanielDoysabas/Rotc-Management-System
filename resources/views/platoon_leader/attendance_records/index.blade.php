@@ -17,16 +17,19 @@
                                     <option value="{{ $course->id }}">{{ $course->name }}</option>
                                 @endforeach
                             </select>
-                            <input class="form-control" type="text" name="date_started_at" id="date_started_at"
-                                placeholder="Date Started" onfocus="(this.type = 'date')">
-                            <input class="form-control" type="text" name="date_ended_at" id="date_ended_at"
-                                placeholder="Date Ended" onfocus="(this.type = 'date')">
                             <button type="button" class="btn btn-primary" onclick="filterAttendance()">Filter</button>
                         </div>
                     </form>
                 </div><br>
+
+                <div>
+
+                </div>
                 <div class="card">
                     <div class="card-body">
+                    <a class="float-right btn btn-sm btn-primary me-3"
+                            href="{{ route('platoon_leader.attendance-records.create') }}">Add
+                            Record +</a><br><br>
                         <div class="table-responsive">
                             <table class="table table-hover attendance_dt">
                                 <caption>Attendance Records <i class="fas fa-clipboard-list ml-1"></i> </caption>
@@ -53,79 +56,10 @@
                                         <th>Total Points</th>
                                         <th>Average</th>
                                         <th>Percentage (30%)</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>1010101</td>
-                                        <td>Acosta Dave D</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>15</td>
-                                        <td>100%</td>
-                                        <td>30%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>1010101</td>
-                                        <td>Acosta Dave D</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>15</td>
-                                        <td>100%</td>
-                                        <td>30%</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>1010101</td>
-                                        <td>Acosta Dave D</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>1</td>
-                                        <td>15</td>
-                                        <td>100%</td>
-                                        <td>30%</td>
-                                    </tr>
-
                                     <!-- {{-- Display Attendance Logs --}} -->
                                 </tbody>
                             </table>

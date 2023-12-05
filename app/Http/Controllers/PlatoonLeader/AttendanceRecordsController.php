@@ -8,11 +8,18 @@ use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Resources\Attendance\AttendanceResource;
+use App\Http\Requests\AttendanceRecords\AttendanceRecordsRequest;
+use Illuminate\Support\Facades\DB;
 use App\Models\Course;
+use App\Models\Role;
+use App\Models\Student;
+use App\Models\Performance;
+use App\Models\AttendanceRecords;
+
 
 class AttendanceRecordsController extends Controller
 {
-    public function __invoke(Request $request)
+    public function index(Request $request)
     {
         if(request()->ajax())
         {
@@ -44,5 +51,23 @@ class AttendanceRecordsController extends Controller
         return view('platoon_leader.attendance_records.index', [
             'courses' => Course::all(),
         ]);  
+    }
+
+    public function create()
+    {
+        return view('platoon_leader.attendance_records.create');
+    }
+
+    public function show($id)
+    {
+        $users = DB::table('students')->where('student_id',$id)->get();
+        return response()->json($users);
+    }
+
+    public function store(AttendanceRecordsRequest $request)
+    {
+        AttendanceRecords::create($request->validated());
+
+        return to_route('platoon_leader.attendance-records.index')->with(['success' => 'Student Performance Record Added Successfully']);
     }
 }

@@ -39,7 +39,7 @@ use App\Http\Controllers\Main\{
 use App\Http\Controllers\PlatoonLeader\{
     AttendanceController as PlatoonLeaderAttendanceController,
     AttendanceMonitoringController,
-    AttendanceRecordsController as PlatoonLeaderAttendanceRecordsController,
+    AttendanceRecordsController,
     StudentsgradeController as PlatoonLeaderStudentsgradeController,
     MeritanddemeritController as PlatoonLeaderMeritanddemeritController,
     DashboardController as PlatoonLeaderDashboardController,
@@ -100,14 +100,12 @@ Route::group(['middleware' => ['auth', 'platoon_leader'], 'prefix' => 'platoon_l
     Route::get('dashboard', PlatoonLeaderDashboardController::class)->name('dashboard.index');
     // update
     Route::get('meritanddemerit', PlatoonLeaderMeritanddemeritController::class)->name('meritanddemerit.index');
-    Route::get('attendance-records', PlatoonLeaderAttendanceRecordsController::class)->name('attendance_records.index');
     Route::get('studentsgrades', PlatoonLeaderStudentsgradeController::class)->name('studentsgrades.index');
 
     /** Start Attendance Management */
         Route::resource('students', PlatoonLeaderStudentController::class);
         Route::resource('attendance-monitoring', AttendanceMonitoringController::class)->only('index', 'store');
-
-        // platoon_leader.attendance_record.index
+        Route::resource('attendance-records', AttendanceRecordsController::class);
         Route::get('attendances', PlatoonLeaderAttendanceController::class)->name('attendances.index');
     /** End Attendance Management */
 
