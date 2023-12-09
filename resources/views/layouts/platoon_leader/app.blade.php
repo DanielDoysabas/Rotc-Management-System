@@ -59,7 +59,7 @@
                                     Platoon Management
                                 </span>
                             </a>
-                            <div class="collapse @if (Route::is('platoon_leader.students.*') || Route::is('platoon_leader.performances.*')) show @endif"
+                            <div class="collapse @if (Route::is('platoon_leader.students.*') || Route::is('platoon_leader.attendance-records.*') || Route::is('platoon_leader.performances.*')) show @endif"
                                 id="to_student_management">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
@@ -72,6 +72,12 @@
                                         <a href="{{ route('platoon_leader.performances.index') }}"
                                             class="nav-link  @if (Route::is('platoon_leader.performances.*')) text-primary @endif">
                                             Student Performance
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('platoon_leader.attendance-records.index') }}"
+                                            class="nav-link  @if (Route::is('platoon_leader.attendance-records.*')) text-primary @endif">
+                                            Student Attendance Records 
                                         </a>
                                     </li>
                                 </ul>

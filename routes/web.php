@@ -41,6 +41,8 @@ use App\Http\Controllers\PlatoonLeader\{
     AttendanceMonitoringController,
     DashboardController as PlatoonLeaderDashboardController,
     PerformanceController,
+    AttendanceRecordsController,
+    UpdateAttendanceRecordsController,
     StudentController as PlatoonLeaderStudentController
 };
 
@@ -99,6 +101,10 @@ Route::group(['middleware' => ['auth', 'platoon_leader'], 'prefix' => 'platoon_l
         Route::resource('students', PlatoonLeaderStudentController::class);
 
         Route::resource('attendance-monitoring', AttendanceMonitoringController::class)->only('index', 'store');
+        Route::resource('attendance-records', AttendanceRecordsController::class);
+        Route::get('records',[AttendanceRecordsController::class, 'index'])->name('records');
+        Route::get('show',[AttendanceRecordsController::class, 'show'])->name('show');
+        Route::get('update_records',[UpdateAttendanceRecordsController::class, 'update_records'])->name('update_records');
         Route::get('attendances', PlatoonLeaderAttendanceController::class)->name('attendances.index');
     /** End Attendance Management */
 

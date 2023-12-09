@@ -332,7 +332,7 @@
         var table = $('.student_dt').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('platoon_leader.records.index') }}",
+            ajax: "{{ route('platoon_leader.records') }}",
             columns: [
                 {
                 data: "student_id",
@@ -376,7 +376,7 @@
         $('.attendance_dt').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('platoon_leader.records.show') }}",
+            ajax: "{{ route('platoon_leader.show') }}",
             columns: list_columns,
         });
 
@@ -421,7 +421,7 @@
         ];
         c_index(
             $(".student_dt"),
-            route("platoon_leader.records.index", {
+            route("platoon_leader.records", {
                 course:$('#course').val(),
             }),
             record_columns,
@@ -473,7 +473,7 @@
 
         c_index(
             $(".attendance_dt"),
-            route("platoon_leader.records.show"),
+            route("platoon_leader.show"),
             list_columns,
             null,
             true
