@@ -7,13 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
-use App\Http\Resources\Attendance\AttendanceResource;
 use App\Http\Requests\AttendanceRecords\AttendanceRecordsRequest;
+use App\Http\Resources\Attendance\AttendanceRecordsResource;
 use Illuminate\Support\Facades\DB;
-use App\Models\Course;
 use App\Models\Role;
 use App\Models\Student;
-use App\Models\Performance;
 use App\Models\AttendanceRecords;
 
 
@@ -21,53 +19,71 @@ class AttendanceRecordsController extends Controller
 {
     public function index(Request $request)
     {
+
         if(request()->ajax())
         {
-            $attendances = AttendanceResource::collection(
-                Attendance::query()
-                ->when(filled($request->query('date_started_at')) && filled($request->query('date_ended_at')), 
-                    fn($query) => $query->whereBetween('created_at', [Carbon::parse($request->date_started_at)->startOfDay(), Carbon::parse($request->date_ended_at)->endOfDay()]))
-
-                ->when(filled($request->query('date_started_at')) && blank($request->query('date_ended_at')), 
-                    fn($query) => $query->whereDate('created_at', $request->date_started_at))
-
-                ->when(filled($request->query('date_ended_at')) && blank($request->query('date_started_at')), 
-                    fn($query) => $query->whereDate('date_ended_at', $request->date_ended_at ))
-
-                ->when(blank($request->query('date_started_at')) && blank($request->query('date_ended_at')), 
-                    fn($query) => $query->whereDate('created_at', now()))
-
-                ->when(filled(request('course')), 
-                    fn($query) => $query->whereRelation('student', 'course_id', request('course')))
-                    
-                ->with('student')
-                ->latest()
-                ->get()
-            );
-
-            return DataTables::of($attendances)->addIndexColumn()->make(true);
+            if ($request->query('course')=="") {
+                $student_data = DB::table('students')->leftJoin('courses', 'students.course_id', '=', 'courses.id')->get();
+                return  DataTables::of($student_data)->addIndexColumn()->make(true);
+            }else{
+                $student_data = DB::table('students')->leftJoin('courses', 'students.course_id', '=', 'courses.id')->where('courses.id', '=', $request->query('course'))->get();
+                return  DataTables::of($student_data)->addIndexColumn()->make(true);
+            }
         }
+
+        $data = DB::table('attendance_records')->get();
+        $course = DB::table('courses')->get();
+        $student_data = DB::table('students')->leftJoin('courses', 'students.course_id', '=', 'courses.id')->get();
+
+        return view('platoon_leader.attendance_records.index', ['course' => $course, 'datas' => $data, 'student_data'=> $student_data]);  
+    }
+
+    public function create(Request $data)
+    {
+        if(request()->ajax())
+        {
+            $g = $data->query('data');
+            $arr = []; 
+            foreach ($g as $value ) {
+                $query = DB::table('students')->where('student_id', '=', $value["student_id"])->get();
+                // dump($query);
+                // print_r($value["student_id"]);
+                if (sizeof($query)!=0) {
+                    array_push($arr,$query[0]);
+                }
+            }
+            foreach ($arr as $value) {
+                $id = $value->student_id;
+                $fullname= $value->first_name." ".$value->middle_name." ".$value->last_name;
+                if (DB::table('attendance_records')->where('student_id', $id)->exists()) {
+                    dump(true);
+                }else{
+                    dump(false);
+                    // dump($value->first_name." ".$value->middle_name." ".$value->last_name);
+                    $send = DB::table('attendance_records')->insert([
+                            'student_id' => $value->student_id,
+                            'student' => $fullname,
+                    ]);
+                }
+            }
+        }
+
+            // return view('platoon_leader.attendance_records.create');
+    }
         
-        return view('platoon_leader.attendance_records.index', [
-            'courses' => Course::all(),
-        ]);  
-    }
-
-    public function create()
+    public function show()
     {
-        return view('platoon_leader.attendance_records.create');
+        if(request()->ajax())
+        {
+            $student_data = DB::table('attendance_records')->get();
+            return  DataTables::of($student_data)->addIndexColumn()->addColumn('full_day', function ($data) {
+                return $data->student_id.' - '.$data->day_one.' - '.$data->day_two.' - '.$data->day_three.' - '.$data->day_four.' - '.$data->day_five.' - '.
+                $data->day_six.' - '.$data->day_seven.' - '.$data->day_eight.' - '.$data->day_nine.' - '.$data->day_ten.' - '.$data->day_eleven.' - '.
+                $data->day_twelve.' - '.$data->day_thirtheen.' - '.$data->day_fourtheen.' - '.$data->day_fiftheen;
+            })->make(true);
+        }
+        // $users = DB::table('students')->where('student_id',$id)->get();
+        // return response()->json($users);
     }
-
-    public function show($id)
-    {
-        $users = DB::table('students')->where('student_id',$id)->get();
-        return response()->json($users);
-    }
-
-    public function store(AttendanceRecordsRequest $request)
-    {
-        AttendanceRecords::create($request->validated());
-
-        return to_route('platoon_leader.attendance-records.index')->with(['success' => 'Student Performance Record Added Successfully']);
-    }
+        
 }

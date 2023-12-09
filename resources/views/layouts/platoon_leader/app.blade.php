@@ -59,7 +59,7 @@
                                     Platoon Management
                                 </span>
                             </a>
-                            <div class="collapse @if (Route::is('platoon_leader.students.*') || Route::is('platoon_leader.meritanddemerit.*') || Route::is('platoon_leader.studentsgrades.*') || Route::is('platoon_leader.performances.*') || Route::is('platoon_leader.attendance-records.*')) show @endif"
+                            <div class="collapse @if (Route::is('platoon_leader.students.*') || Route::is('platoon_leader.performances.*')) show @endif"
                                 id="to_student_management">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
@@ -74,27 +74,10 @@
                                             Student Performance
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @if (Route::is('platoon_leader.attendance-records.*')) text-primary @endif"
-                                            href="{{ route('platoon_leader.attendance-records.index') }}">
-                                            <span class="nav-link-text">Attendance Record</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @if (Route::is('platoon_leader.meritanddemerit.*')) text-primary @endif"
-                                            href="{{ route('platoon_leader.meritanddemerit.index') }}">
-                                            <span class="nav-link-text">Merit/Demerit Points</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @if (Route::is('platoon_leader.studentsgrades.*')) text-primary @endif"
-                                            href="{{ route('platoon_leader.studentsgrades.index') }}">
-                                            <span class="nav-link-text">Student Grades</span>
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
                         </li>
+
 
                     </ul>
                     <!-- Divider -->

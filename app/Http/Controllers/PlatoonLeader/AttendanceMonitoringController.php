@@ -39,5 +39,4 @@ class AttendanceMonitoringController extends Controller
 
         return $service->handle(student: $student);
     }
-
 }

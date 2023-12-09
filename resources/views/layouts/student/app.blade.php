@@ -49,13 +49,6 @@
                                 <span class="nav-link-text">Performance Record</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link @if (Route::is('student.meritanddemerit.*')) active @endif"
-                                href="{{ route('student.meritanddemerit.index') }}">
-                                <i class="fas fa-clipboard-list"></i>
-                                <span class="nav-link-text">Merit/Demerit Points</span>
-                            </a>
-                        </li>
 
 
                     </ul>

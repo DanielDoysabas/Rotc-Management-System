@@ -39,9 +39,6 @@ use App\Http\Controllers\Main\{
 use App\Http\Controllers\PlatoonLeader\{
     AttendanceController as PlatoonLeaderAttendanceController,
     AttendanceMonitoringController,
-    AttendanceRecordsController,
-    StudentsgradeController as PlatoonLeaderStudentsgradeController,
-    MeritanddemeritController as PlatoonLeaderMeritanddemeritController,
     DashboardController as PlatoonLeaderDashboardController,
     PerformanceController,
     StudentController as PlatoonLeaderStudentController
@@ -50,8 +47,7 @@ use App\Http\Controllers\PlatoonLeader\{
 // Student Restful Controller
 use App\Http\Controllers\Student\{
     AttendanceController,
-    PerformanceController as StudentPerformanceController,
-    MeritanddemeritController as StudentMeritanddemeritController
+    PerformanceController as StudentPerformanceController
 };
 
 Route::get('/', function () {
@@ -98,14 +94,11 @@ Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'a
 // Platoon leader
 Route::group(['middleware' => ['auth', 'platoon_leader'], 'prefix' => 'platoon_leader', 'as' => 'platoon_leader.'],function() {
     Route::get('dashboard', PlatoonLeaderDashboardController::class)->name('dashboard.index');
-    // update
-    Route::get('meritanddemerit', PlatoonLeaderMeritanddemeritController::class)->name('meritanddemerit.index');
-    Route::get('studentsgrades', PlatoonLeaderStudentsgradeController::class)->name('studentsgrades.index');
 
     /** Start Attendance Management */
         Route::resource('students', PlatoonLeaderStudentController::class);
+
         Route::resource('attendance-monitoring', AttendanceMonitoringController::class)->only('index', 'store');
-        Route::resource('attendance-records', AttendanceRecordsController::class);
         Route::get('attendances', PlatoonLeaderAttendanceController::class)->name('attendances.index');
     /** End Attendance Management */
 
@@ -119,7 +112,6 @@ Route::group(['middleware' => ['auth', 'platoon_leader'], 'prefix' => 'platoon_l
 // Student
 Route::group(['middleware' => ['auth', 'student'], 'prefix' => 'student', 'as' => 'student.'],function() {
     Route::get('attendances', AttendanceController::class)->name('attendances.index');
-    Route::get('meritanddemerit', StudentMeritanddemeritController::class)->name('meritanddemerit.index');
     Route::resource('performances', StudentPerformanceController::class);
 
 });
