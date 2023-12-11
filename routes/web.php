@@ -105,8 +105,10 @@ Route::group(['middleware' => ['auth', 'platoon_leader'], 'prefix' => 'platoon_l
         Route::resource('attendance-records', AttendanceRecordsController::class);
         Route::resource('merits-demerits', MeritsDemeritsController::class);
         Route::get('merits-demerits/show', [MeritsDemeritsController::class, 'show']);   
+        Route::get('merits-demerits/create', [MeritsDemeritsController::class, 'create']);   
         Route::get('records',[AttendanceRecordsController::class, 'index'])->name('records');
         Route::get('show',[AttendanceRecordsController::class, 'show'])->name('show');
+        Route::get('update_merits',[UpdateAttendanceRecordsController::class, 'update_merits'])->name('update_merits');
         Route::get('update_records',[UpdateAttendanceRecordsController::class, 'update_records'])->name('update_records');
         Route::get('attendances', PlatoonLeaderAttendanceController::class)->name('attendances.index');
     /** End Attendance Management */

@@ -68,7 +68,7 @@ class AttendanceRecordsController extends Controller
             }
         }
 
-            // return view('platoon_leader.attendance_records.create');
+        // return view('platoon_leader.attendance_records.create');
     }
         
     public function show()

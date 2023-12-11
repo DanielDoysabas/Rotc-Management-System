@@ -113,39 +113,54 @@
                     },
                 },
                 {
-                    data: "merits",
+                    data: "full_day",
                     render(data) {
-                        return data;
+                        console.log(data);
+                        const ar = data.split("-");
+                        return '<input class="form-control" type="number" id="merits-'+ar[0]+'" value="'+ar[2]+'">';
                     },
                 },
                 {
-                    data: "demerits",
+                    data: "full_day",
                     render(data) {
-                        return data;
+                        const ar = data.split("-");
+                        return '<input class="form-control" type="number" id="demerits-'+ar[0]+'" value="'+ar[3]+'">';
                     },
                 },
                 {
-                    data: "total_points",
+                    data: "full_day",
                     render(data) {
-                        return data;
+                        const ar = data.split("-");
+                        return '<input class="form-control" type="number" id="totalpoints-'+ar[0]+'" value="'+ar[4]+'">';
                     },
                 },
                 {
-                    data: "percentage",
+                    data: "full_day",
                     render(data) {
-                        return data;
+                        const ar = data.split("-");
+                        return '<input class="form-control" type="number" id="percentage-'+ar[0]+'" value="'+ar[5]+'">';
                     },
                 },
                 {
-                    data: "semester",
+                    data: "full_day",
                     render(data) {
-                        return data;
+                        const ar = data.split("-");
+                        let a = "";
+                        if(ar[1]=="1"){
+                            a += '<option value="0" >1st Semester</option>';
+                            a += '<option value="1" selected>2nd Semester</option>';
+                        }else{
+                            a += '<option value="0" selected>1st Semester</option>';
+                            a += '<option value="1" >2nd Semester</option>';
+                        }
+                        return '<select id=semester-'+ar[0]+' class="form-control">'+a+'</select>';
                     },
                 },
                 {
-                    data: "year",
+                    data: "full_day",
                     render(data) {
-                        return data;
+                        const ar = data.split("-");
+                        return '<input class="form-control" type="text" id="year-'+ar[0]+'" value="'+ar[6]+'">';
                     },
                 },
                 {
@@ -248,112 +263,92 @@
             },
         ];
         
-        // c_index(
-        //     $(".student_dt"),
-        //     route("platoon_leader.records", {
-        //         course:$('#course').val(),
-        //     }),
-        //     record_columns,
-        //     null,
-        //     true
-        // );
+        c_index(
+            $(".student_dt"),
+            route("platoon_leader.records", {
+                course:$('#course').val(),
+            }),
+            record_columns,
+            null,
+            true
+        );
     }
 
-    // function add_record(checkbox,stud_id) {
-    //     if(checkbox.checked == true){
-    //         if (obj.hasOwnProperty(stud_id)) {
-    //         }else{
-    //             obj.push(
-    //                 {
-    //                     student_id: stud_id
-    //                 }
-    //             );
-    //         }
-    //     }else{
-    //         obj.pop(
-    //             {
-    //                 student_id: stud_id
-    //             }
-    //             );
-    //     }
-    //     // console.log(obj);
-    // }
+    function add_record(checkbox,stud_id) {
+        if(checkbox.checked == true){
+            if (obj.hasOwnProperty(stud_id)) {
+            }else{
+                obj.push(
+                    {
+                        student_id: stud_id
+                    }
+                );
+            }
+        }else{
+            obj.pop(
+                {
+                    student_id: stud_id
+                }
+                );
+        }
+    }
 
-    // function submit_record() {
-    //     var formData = {
-    //         data: obj
-    //     };
-
-    //     var type = "GET";
-    //     var ajaxurl = '/platoon_leader/attendance-records/create';
-
-    //     $.ajax({
-    //         type: type,
-    //         url: ajaxurl,
-    //         data: formData,
-    //         dataType: 'json',
-    //         success: function (data) {
-    //             console.log(data);
-    //         },
-    //         error: function (data) {
-    //             console.log(data);
-    //         }
-    //     });
-
-    //     c_index(
-    //         $(".attendance_dt"),
-    //         route("platoon_leader.show"),
-    //         list_columns,
-    //         null,
-    //         true
-    //     );
-    // }
-
-    // function update_records(record_id) {
-    //     let list_days = ["day_one","day_two",
-    //     "day_three","day_four","day_five","day_six",
-    //     "day_seven","day_eight","day_nine","day_ten",
-    //     "day_eleven","day_twelve","day_thirtheen","day_fourtheen",
-    //     "day_fiftheen",
-    //     ];
+    function submit_record() {
         
-    //     let list_to_update_days =[{}];
+        var formData = {
+            data: obj
+        };
 
-    //     list_days.forEach(element => {
-    //         // console.log(element);    
-    //         $get_data = $("#"+record_id+"-"+element).is(':checked');    
-    //         if ($get_data) {
-    //                 list_to_update_days.push(
-    //                 {
-    //                     element : true
-    //                 }
-    //                 );
-    //             }else{
-    //                 list_to_update_days.push(
-    //                 {
-    //                     element: false
-    //                 }
-    //                 );
-    //         }
-    //     });
+        var type = "GET";
+        var ajaxurl = '/platoon_leader/merits-demerits/create';
 
-    //     var formData = {
-    //         student_id: record_id,
-    //         data: list_to_update_days
-    //     };
+        $.ajax({
+            type: type,
+            url: ajaxurl,
+            data: formData,
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
 
+        c_index(
+            $(".attendance_dt"),
+            '{{URL::to("platoon_leader/merits-demerits/show")}}',
+            list_columns,
+            null,
+            true
+        );
+    }
 
-    //     var type = "GET";
-    //     var ajaxurls = '/platoon_leader/update_records';
+    function update_records(record_id) {
+        let get_merits = $("#merits-"+record_id).val();    
+        let get_demerits = $("#demerits-"+record_id).val();    
+        let get_totalpoints = $("#totalpoints-"+record_id).val();    
+        let get_percentage = $("#percentage-"+record_id).val();    
+        let get_semester = $("#semester-"+record_id).is(':selected');   
+        let get_year = $("#year-"+record_id).val();    
 
-    //     c_index(
-    //         $(".attendance_dt"),
-    //         route("platoon_leader.update_records", formData),
-    //         list_columns,
-    //         null,
-    //         true
-    //     );
+        var formData_dem = {
+            student_id: record_id,
+            merits: get_merits,
+            demerits: get_demerits,
+            total_points: get_totalpoints,
+            percentage: get_percentage,
+            semester: get_semester,
+            year: get_year,
+        };
 
-    // }
+        c_index(
+            $(".attendance_dt"),
+            route('platoon_leader.update_merits',formData_dem),
+            list_columns,
+            null,
+            true
+        );
+    }
     </script>
 @endsection

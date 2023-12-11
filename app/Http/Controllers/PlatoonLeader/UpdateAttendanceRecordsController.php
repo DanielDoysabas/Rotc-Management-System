@@ -17,6 +17,33 @@ use App\Models\AttendanceRecords;
 
 class UpdateAttendanceRecordsController extends Controller
 {
+    public function update_merits(Request $data){
+        if(request()->ajax()) 
+        {
+            $stud_id = $data->query('student_id');
+            $merits = $data->query('merits');
+            $demerits = $data->query('demerits');
+            $total_points = $data->query('total_points');
+            $percentage = $data->query('percentage');
+            $semester = $data->query('semester');
+            $year = $data->query('year');
+            $a = [
+              'semester'=>$semester,  
+              'merits'=>$merits,  
+              'total_points'=>$total_points,  
+              'percentage'=>$percentage,  
+              'year'=>$year,  
+            ];
+            DB::table('merits_demerits')->where('student_id', $stud_id)->update($a);
+
+            $student_data_merits = DB::table('merits_demerits')->get();
+            return  DataTables::of($student_data_merits)->addIndexColumn()->addColumn('full_day', function ($data) {
+                return $data->student_id.'-'.$data->semester.'-'.$data->merits.'-'.$data->demerits.'-'.$data->total_points
+                .'-'.$data->percentage.'-'.$data->year;
+            })->make(true);
+        }    
+    }
+
     public function update_records(Request $data){
         if(request()->ajax())
         {
