@@ -25,6 +25,10 @@ use App\Http\Controllers\Admin\{
     UserController
 };
 
+use App\Http\Controllers\API\{
+    AuthController as ApiAuthController,
+};
+
 // Auth Restful Controller
 use App\Http\Controllers\Auth\{
     AuthController
@@ -153,5 +157,7 @@ Route::group(['as' => 'auth.'], function () {
     });
 });
 
+Route::any('request_otp', [ApiAuthController::class, 'requestOtp']);
+Route::post('verify_otp', [ApiAuthController::class, 'verifyOtp']);
 
 Auth::routes(['login' => false, 'register' => false, 'logout' => false]);
