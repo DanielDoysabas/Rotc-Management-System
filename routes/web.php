@@ -1,7 +1,8 @@
 <?php
-
+// Mail
+use App\Mail\sendEmail;
 // Facades
-use Illuminate\Support\Facades\{Auth,Route};
+use Illuminate\Support\Facades\{Auth,Route,Mail};
 
 // Shared Restful Controllers
 use App\Http\Controllers\All\{
@@ -157,7 +158,13 @@ Route::group(['as' => 'auth.'], function () {
     });
 });
 
-Route::any('request_otp', [ApiAuthController::class, 'requestOtp']);
-Route::post('verify_otp', [ApiAuthController::class, 'verifyOtp']);
 
 Auth::routes(['login' => false, 'register' => false, 'logout' => false]);
+
+// Route::any('request_otp', 
+// function(){
+//     Mail::to('methuselahdanieldoysabas@gmail.com')->send(new sendEmail());
+// }
+// );
+Route::get('request_otp', [ApiAuthController::class, 'requestOtp']);
+// Route::post('verify_otp', [ApiAuthController::class, 'verifyOtp']);

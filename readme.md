@@ -10,3 +10,12 @@
 
 Link: http://127.0.0.1:8000/login
 
+credentials
+platoon@gmail.com
+test1234
+
+
+
+
+php artisan migrate
+php artisan make:migration {}
