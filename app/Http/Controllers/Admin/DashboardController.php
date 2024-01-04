@@ -20,6 +20,13 @@ class DashboardController extends Controller
 
     public function __invoke()
     {
+
+        dd(session()->all());
+        // if (!session()->has('users')){
+        //     session()->flush();
+        //     return to_route('auth.otp');
+        // }
+
         return view('admin.dashboard.index', [
             'activities' => Activity::latest()->take(5)->get(),
             'total_active_user' => User::notAdmin()->active()->count(),

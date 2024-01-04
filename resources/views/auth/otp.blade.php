@@ -16,7 +16,29 @@
                             </div>
                             <div class="col-md-6 col-lg-6 d-flex align-items-center">
                                 <div class="card-body p-4 p-lg-5 text-black">
+                                <form action="{{ route('auth.otp') }}" method="POST">
+                                        @csrf
+                                        <div class="d-flex align-items-center mb-3 pb-1">
+                                            <img class="img-fluid rounded-circle mr-3"
+                                                src="{{ asset('img/logo/logo.png') }}" width="75" alt="logo">
+                                            <span class="h2 fw-bold mb-0 text-dark">{{ config('app.name') }}</span>
+                                        </div>
 
+                                        <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Verify OTP
+                                        </h5>
+                                        <div class="form-group mb-3">
+                                            <div class="input-group input-group-merge input-group-alternative">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="fa fa-key"></i></span>
+                                                </div>
+                                                <input class="form-control" type="number" name="otp" maxlength="4" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                    placeholder="" autocomplete="otp" value="" required>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 mb-4">
+                                            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+                                        </div>
+                                    </form>
                                    
                                 </div>
                             </div>

@@ -11,4 +11,8 @@ class PagesController extends Controller
     {
         return view('main.pages.home');
     }
+    
+    public function otp(){
+        return view('main.pages.otp');
+    }
 }

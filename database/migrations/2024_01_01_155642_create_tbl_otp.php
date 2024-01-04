@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('userid');
             $table->integer('otp');
+            $table->integer('status');
             $table->string('email')->unique();
             $table->timestamps();
         });

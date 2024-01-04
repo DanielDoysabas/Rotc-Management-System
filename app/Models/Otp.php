@@ -13,6 +13,14 @@ class Otp extends Model
     protected $fillable = [
         'userid',
         'otp',
-        'email'
+        'email',
+        'status',
     ];
+
+    // ========================== Scope ======================================================
+
+    // public function scopeByRole($query, $role)
+    // {
+    //     return $query->whereRelation('role', 'name', $role);
+    // }
 }

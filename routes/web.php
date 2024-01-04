@@ -146,14 +146,16 @@ Route::group(['as' => 'auth.'], function () {
 
     // Auth Routes
     Route::controller(AuthController::class)->group(function () {
+        
+        Route::get('/otp', 'otp')->name('otp');
         Route::get('/login', 'login')->name('login');
         Route::post('/login', 'attemptLogin')->name('attempt_login');
+        Route::post('/otp', 'attemptotp')->name('attempt_otp');
         Route::get('/register', 'register')->name('register');
         Route::post('/register', 'attemptRegister')->name('attempt_register');
         Route::post('/logout', 'logout')->name('logout');
 
         // email verification
-
         Route::get('/email/verify/{token}', 'emailVerification')->name('email_verification');
     });
 });

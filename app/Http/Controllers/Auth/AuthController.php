@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\Otp;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Mail\SendEmailVerification;
@@ -22,10 +23,54 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    public function otp()
+    {
+        return view('auth.otp');
+    }
+
     // public function register()
     // {
     //     return view('auth.register');
     // }
+    
+    public function attemptOtp(Request $request)
+    {
+        $credentials = $request->only('otp');
+        $email = $request->session()->get('email');
+        // dump($email);
+        // dump($credentials["otp"]);
+        $id = Otp::where('email','=',$email)
+        ->where('otp','=',$credentials["otp"])->first();
+        $token = $request->session()->get('token');
+        if($id){
+
+            Otp::where('email', $email)
+            ->update([
+                'status' => 1
+            ]);
+
+            $ticket = [
+                "email"=>$email,
+                "password"=>$token,
+            ];
+
+            if(Auth::attempt($ticket + ['is_activated' => true])) {
+                $request->session()->regenerate();
+                
+                $this->log_activity(model: auth()->user(), event:'login', model_name: 'Account', model_property_name: auth()->user()->name, conjunction:'an');
+                session()->put('otp_is_done', true);
+                // return match (auth()->user()->role->name) {
+                //     'admin' => to_route('admin.dashboard.index'),
+                //     'platoon_leader' => to_route('platoon_leader.attendances.index'),
+                //     'student' => to_route('student.attendances.index'),
+                // };
+            }else{
+
+                session()->flush();
+                // return redirect('/login')->with('error', 'The Username / Password do not match');
+            }
+        }
+    }
 
     public function attemptLogin(Request $request)
     {
@@ -34,16 +79,37 @@ class AuthController extends Controller
             
         if (Auth::attempt($credentials + ['is_activated' => true])) {
             //Auth::logoutOtherDevices($request->password);
-
             $request->session()->regenerate();
-
-            $this->log_activity(model: auth()->user(), event:'login', model_name: 'Account', model_property_name: auth()->user()->name, conjunction:'an');
-
-            return match (auth()->user()->role->name) {
-                'admin' => to_route('admin.dashboard.index'),
-                'platoon_leader' => to_route('platoon_leader.attendances.index'),
-                'student' => to_route('student.attendances.index'),
-            };
+            $uid = Otp::where('id', auth()->id())->first();
+            $email = $credentials["email"];
+            $token = $credentials["password"];
+            if($uid){
+                if($uid->status==1){
+                    $this->log_activity(model: auth()->user(), event:'login', model_name: 'Account', model_property_name: auth()->user()->name, conjunction:'an');
+                    return match (auth()->user()->role->name) {
+                        'admin' => to_route('admin.dashboard.index'),
+                        'platoon_leader' => to_route('platoon_leader.attendances.index'),
+                        'student' => to_route('student.attendances.index'),
+                    };
+                }else{
+                    session()->flush();
+                    $request->session()->put('email', $email);
+                    $request->session()->put('token', $token);
+                    return to_route('auth.otp');
+                }
+                
+            }else{
+                // 
+                $otp = rand(1000,9999);
+                $create_otp = Otp::create(
+                [
+                    'userid' => auth()->id(),
+                    'otp' => $otp,
+                    'email' => $email,
+                    'status' => 0,
+                ]);
+                return to_route('auth.otp');
+            }
         } else {
             $request->session()->flush();
             return redirect('/login')->with('error', 'The Username / Password do not match');
