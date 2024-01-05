@@ -59,7 +59,7 @@
                                     Platoon Management
                                 </span>
                             </a>
-                            <div class="collapse @if (Route::is('platoon_leader.students.*') || Route::is('platoon_leader.merits-demerits.*') || Route::is('platoon_leader.attendance-records.*') || Route::is('platoon_leader.performances.*')) show @endif"
+                            <div class="collapse @if (Route::is('platoon_leader.students.*') || Route::is('platoon_leader.studentfinalgrade.*')  || Route::is('platoon_leader.studentgrade.*') || Route::is('platoon_leader.merits-demerits.*') || Route::is('platoon_leader.attendance-records.*') || Route::is('platoon_leader.performances.*')) show @endif"
                                 id="to_student_management">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
@@ -84,6 +84,18 @@
                                         <a href="{{ route('platoon_leader.merits-demerits.index') }}"
                                             class="nav-link  @if (Route::is('platoon_leader.merits-demerits.*')) text-primary @endif">
                                             Student Merits and Demerits Points
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('platoon_leader.studentgrade.index') }}"
+                                            class="nav-link  @if (Route::is('platoon_leader.studentgrade.*')) text-primary @endif">
+                                            Student Grades
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('platoon_leader.studentfinalgrade.index') }}"
+                                            class="nav-link  @if (Route::is('platoon_leader.studentfinalgrade.*')) text-primary @endif">
+                                            Student Final Grades
                                         </a>
                                     </li>
                                 </ul>

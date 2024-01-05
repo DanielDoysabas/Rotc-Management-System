@@ -17,6 +17,6 @@ test1234
 
 
 
-
+php artisan route:list
 php artisan migrate
 php artisan make:migration {}

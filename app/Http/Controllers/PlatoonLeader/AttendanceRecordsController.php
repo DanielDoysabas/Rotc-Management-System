@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\PlatoonLeader;
-
+use App\Models\Otp;
 use App\Models\Attendance;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
@@ -20,6 +21,20 @@ class AttendanceRecordsController extends Controller
     public function index(Request $request)
     {
 
+        $sdata = Otp::where('userid', auth()->id())->first();
+        $request_data = $sdata["status"] ?? null;
+        if($request_data==null){
+            return redirect('/otp');
+        }else{
+            if($sdata["status"]==0){
+                return redirect('/otp');
+            }
+            // New Session Login still required OTP
+            if(session()->get('is_otp')==null){
+                return redirect('/otp');
+            }
+        }
+        
         if(request()->ajax())
         {
             if ($request->query('course')=="") {
@@ -40,14 +55,13 @@ class AttendanceRecordsController extends Controller
 
     public function create(Request $data)
     {
+        // dd($data);
         if(request()->ajax())
         {
             $g = $data->query('data');
             $arr = []; 
             foreach ($g as $value ) {
                 $query = DB::table('students')->where('student_id', '=', $value["student_id"])->get();
-                // dump($query);
-                // print_r($value["student_id"]);
                 if (sizeof($query)!=0) {
                     array_push($arr,$query[0]);
                 }
@@ -56,18 +70,50 @@ class AttendanceRecordsController extends Controller
                 $id = $value->student_id;
                 $fullname= $value->first_name." ".$value->middle_name." ".$value->last_name;
                 if (DB::table('attendance_records')->where('student_id', $id)->exists()) {
-                    dump(true);
                 }else{
-                    dump(false);
-                    // dump($value->first_name." ".$value->middle_name." ".$value->last_name);
                     $send = DB::table('attendance_records')->insert([
                             'student_id' => $value->student_id,
                             'student' => $fullname,
+                            'day_one' => 0,
+                            'day_two' => 0,
+                            'day_three' => 0,
+                            'day_four' => 0,
+                            'day_five' => 0,
+                            'day_six' => 0,
+                            'day_seven' => 0,
+                            'day_eight' => 0,
+                            'day_nine' => 0,
+                            'day_ten' => 0,
+                            'day_eleven' => 0,
+                            'day_twelve' => 0,
+                            'day_thirtheen' => 0,
+                            'day_fourtheen' => 0,
+                            'day_fiftheen' => 0,
+                            'total_points' => 0,
+                            'average' => 0,
+                            'percentage_record' => 0,
+                    ]);
+                }
+                $sdata =  DB::table('acadgrade')->where('student_id', '=', $id)->first();
+                $checkdata = $sdata["id"] ?? null;
+                if($checkdata==null || $checkdata==''){
+                    $sdata = Student::where('student_id', $id)->first();
+                    $course_id = $sdata["course_id"];
+                    $scourse = Course::where('id', $course_id)->first();
+                    $course_name = $scourse["abbreviation"];
+                    DB::table('acadgrade')->insert([
+                        'student_id' => $id,
+                        'student' => $fullname,
+                        'course' => $course_name,
+                        'acad' => '-',
+                        'grade' => '-',
+                        'remarks' => '-',
                     ]);
                 }
             }
+            return "true";
         }
-
+        return "false";
         // return view('platoon_leader.attendance_records.create');
     }
         

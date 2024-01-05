@@ -25,7 +25,8 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                return match (auth()->user()->role->name) {
                     'admin' => to_route('admin.dashboard.index'),
-                    'user' => to_route('user.dashboard.index')
+                    'platoon_leader' => to_route('platoon_leader.attendances.index'),
+                    'student' => to_route('student.attendances.index'),
                 };
             }
         }

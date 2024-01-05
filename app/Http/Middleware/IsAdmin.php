@@ -18,5 +18,6 @@ class IsAdmin
     { 
         abort_if(!$request->user()->hasRole('admin'), 404);
         return $next($request);
+
     }
 }

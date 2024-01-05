@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
+use App\Models\Otp;
 use App\Models\Course;
 use App\Models\Platoon;
 use App\Models\Attendance;
@@ -21,11 +22,19 @@ class DashboardController extends Controller
     public function __invoke()
     {
 
-        dd(session()->all());
-        // if (!session()->has('users')){
-        //     session()->flush();
-        //     return to_route('auth.otp');
-        // }
+        $sdata = Otp::where('userid', auth()->id())->first();
+        $request_data = $sdata["status"] ?? null;
+        if($request_data==null){
+            return redirect('/otp');
+        }else{
+            if($sdata["status"]==0){
+                return redirect('/otp');
+            }
+            // New Session Login still required OTP
+            if(session()->get('is_otp')==null){
+                return redirect('/otp');
+            }
+        }
 
         return view('admin.dashboard.index', [
             'activities' => Activity::latest()->take(5)->get(),

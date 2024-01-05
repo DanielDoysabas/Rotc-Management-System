@@ -26,13 +26,20 @@ class LoginController extends Controller
          if(Auth::attempt($credentials) && $user->is_activated) 
          {
             $request->session()->regenerate();
+            // if($user->hasRole('user')) {
+            //    return redirect(route('user.dashboard.index'));
+            // }
 
             if($user->hasRole('admin')) {
                return redirect(route('admin.dashboard.index'));
             }
 
-            if($user->hasRole('user')) {
-               return redirect(route('user.dashboard.index'));
+            if($user->hasRole('platoon_leader')) {
+               return redirect(route('platoon_leader.attendances.index'));
+            }
+            
+            if($user->hasRole('student')) {
+               return redirect(route('student.attendances.index'));
             }
           
          } 

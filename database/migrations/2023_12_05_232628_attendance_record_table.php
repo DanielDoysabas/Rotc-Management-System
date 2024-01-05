@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('day_fiftheen');
             $table->integer('total_points');
             $table->integer('average');
-            $table->integer('percentage');
+            $table->integer('percentage_record');
             $table->timestamps();
         });
     }

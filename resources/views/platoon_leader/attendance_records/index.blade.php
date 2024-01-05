@@ -3,11 +3,18 @@
 @section('title', 'Platoon Leader | Attendance Records V2')
 
 @section('content')
-
+<style>
+.hide{
+    display:none;
+}
+</style>
     {{-- CONTAINER --}}
     <div class="container-fluid py-4">
         <div class="row justify-content-center">
             <div class="col-md-12">
+                <div id="atn_record_alert" class="alert alert-success hide" role="alert">
+                    {{ __('Successfully Added to Attendance Record') }}
+                </div>
                 <div>
                     <div class="card">
                         <div class="card-header">
@@ -312,7 +319,7 @@
                     },
                 },
                 {
-                    data: "percentage",
+                    data: "percentage_record",
                     render(data) {
                         if (data=="" || data==null) {
                             return "0%";
@@ -454,7 +461,7 @@
         var formData = {
             data: obj
         };
-
+        console.log(formData);
         var type = "GET";
         var ajaxurl = '/platoon_leader/attendance-records/create';
 
@@ -462,9 +469,13 @@
             type: type,
             url: ajaxurl,
             data: formData,
-            dataType: 'json',
             success: function (data) {
-                console.log(data);
+                if (data=="true") {
+                    $("#atn_record_alert").delay(1000).fadeIn();
+                    $("#atn_record_alert").delay(3000).fadeOut();
+                }else{
+                    console.log(data);
+                }
             },
             error: function (data) {
                 console.log(data);
@@ -527,4 +538,5 @@
 
     }
     </script>
+ 
 @endsection

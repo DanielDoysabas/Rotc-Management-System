@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\PlatoonLeader;
-
+use App\Models\Otp;
 use App\Models\Course;
 use App\Models\Performance;
 use Illuminate\Http\Request;
@@ -16,6 +16,19 @@ class PerformanceController extends Controller
 {
     public function index(Request $request)
     {
+        $sdata = Otp::where('userid', auth()->id())->first();
+        $request_data = $sdata["status"] ?? null;
+        if($request_data==null){
+            return redirect('/otp');
+        }else{
+            if($sdata["status"]==0){
+                return redirect('/otp');
+            }
+            // New Session Login still required OTP
+            if(session()->get('is_otp')==null){
+                return redirect('/otp');
+            }
+        }
         if(request()->ajax())
         {
             $students = PerformanceResource::collection(Performance::query()

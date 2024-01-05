@@ -16,7 +16,7 @@
                             </div>
                             <div class="col-md-6 col-lg-6 d-flex align-items-center">
                                 <div class="card-body p-4 p-lg-5 text-black">
-                                <form action="{{ route('auth.otp') }}" method="POST">
+                                <form action="{{ route('api.attemptOtp') }}" method="POST">
                                         @csrf
                                         <div class="d-flex align-items-center mb-3 pb-1">
                                             <img class="img-fluid rounded-circle mr-3"
@@ -26,6 +26,9 @@
 
                                         <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Verify OTP
                                         </h5>
+
+                                        @include('layouts.includes.alert')
+                                        
                                         <div class="form-group mb-3">
                                             <div class="input-group input-group-merge input-group-alternative">
                                                 <div class="input-group-prepend">
@@ -49,16 +52,4 @@
         </div>
     </section>
     <!-- End Page content -->
-@endsection
-@section('script')
-    <script>
-        const password_field = document.getElementById('password_field');
-        document.getElementById('password').addEventListener('click', function() {
-            return password_field.getAttribute('type') == "password" ?
-                password_field.setAttribute('type', 'text') :
-                password_field.setAttribute('type', 'password')
-        })
-
-        $('#main_login_nav').addClass('active')
-    </script>
 @endsection

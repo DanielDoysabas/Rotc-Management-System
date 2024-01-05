@@ -102,6 +102,12 @@
                                             <i class="ni ni-tv-2"></i>
                                             <span>Dashboard</span>
                                         </a>
+                                    @elseif (auth()->user()->hasRole('platoon_leader'))
+                                        <a class="nav-link @if (Route::is('platoon_leader.dashboard.index')) active @endif"
+                                            href="{{ route('platoon_leader.dashboard.index') }}">
+                                            <i class="ni ni-tv-2"></i>
+                                            <span class="nav-link-text">Dashboard</span>
+                                        </a>
                                     @else
                                         <a href="{{ route('user.dashboard.index') }}" class="dropdown-item">
                                             <i class="ni ni-tv-2"></i>

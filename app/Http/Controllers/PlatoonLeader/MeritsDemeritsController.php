@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\PlatoonLeader;
-
+use App\Models\Otp;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -19,6 +19,19 @@ class MeritsDemeritsController extends Controller
 {
     public function index(Request $request)
     {
+        $sdata = Otp::where('userid', auth()->id())->first();
+        $request_data = $sdata["status"] ?? null;
+        if($request_data==null){
+            return redirect('/otp');
+        }else{
+            if($sdata["status"]==0){
+                return redirect('/otp');
+            }
+            // New Session Login still required OTP
+            if(session()->get('is_otp')==null){
+                return redirect('/otp');
+            }
+        }
         if(request()->ajax())
         {
             if ($request->query('course')=="") {
@@ -78,9 +91,13 @@ class MeritsDemeritsController extends Controller
         if(request()->ajax()) 
         {
             $student_data = DB::table('merits_demerits')->get();
+            // dd(json_encode($year_data));
             return  DataTables::of($student_data)->addIndexColumn()->addColumn('full_day', function ($data) {
                 return $data->student_id.'-'.$data->semester.'-'.$data->merits.'-'.$data->demerits.'-'.$data->total_points
                 .'-'.$data->percentage.'-'.$data->year;
+            })->addColumn('school_years', function ($data) {
+                $year_data = DB::table('school_years')->get();
+                return $year_data;
             })->make(true);
         }
     }

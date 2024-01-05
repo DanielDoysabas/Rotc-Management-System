@@ -44,6 +44,8 @@ use App\Http\Controllers\Main\{
 use App\Http\Controllers\PlatoonLeader\{
     AttendanceController as PlatoonLeaderAttendanceController,
     AttendanceMonitoringController,
+    StudentFinalGradeController,
+    StudentGradeController,
     DashboardController as PlatoonLeaderDashboardController,
     PerformanceController,
     AttendanceRecordsController,
@@ -75,54 +77,43 @@ Route::get('/', function () {
 // Admin 
 Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin', 'as' => 'admin.'],function() {
     Route::get('dashboard', DashboardController::class)->name('dashboard.index');
-
     /** Start Student Management */
-
         Route::resource('departments', DepartmentController::class);
         Route::resource('courses', CourseController::class);
         Route::resource('platoons', PlatoonController::class);
         Route::resource('students', StudentController::class);
-
     /** End Student Management */
-
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class);
     Route::resource('patients', PatientController::class);
     //Route::get('role', RoleController::class)->name('role.index');
     Route::get('activity_logs', ActivityLogController::class)->name('activity_logs.index');
-
     Route::get('attendances', AdminAttendanceController::class)->name('attendances.index');
     Route::resource('performances', AdminPerformanceController::class);
-
-
     Route::resource('settings', SettingsController::class);
-
 });
 
 // Platoon leader
 Route::group(['middleware' => ['auth', 'platoon_leader'], 'prefix' => 'platoon_leader', 'as' => 'platoon_leader.'],function() {
-    Route::get('dashboard', PlatoonLeaderDashboardController::class)->name('dashboard.index');
-
+        
+        Route::get('dashboard', PlatoonLeaderDashboardController::class)->name('dashboard.index');
     /** Start Attendance Management */
         Route::resource('students', PlatoonLeaderStudentController::class);
 
         Route::resource('attendance-monitoring', AttendanceMonitoringController::class)->only('index', 'store');
         Route::resource('attendance-records', AttendanceRecordsController::class);
         Route::resource('merits-demerits', MeritsDemeritsController::class);
+        Route::resource('studentgrade', StudentGradeController::class);
+        Route::resource('studentfinalgrade', StudentFinalGradeController::class);
         Route::get('merits-demerits/show', [MeritsDemeritsController::class, 'show']);   
         Route::get('merits-demerits/create', [MeritsDemeritsController::class, 'create']);   
         Route::get('records',[AttendanceRecordsController::class, 'index'])->name('records');
         Route::get('show',[AttendanceRecordsController::class, 'show'])->name('show');
-        Route::get('update_merits',[UpdateAttendanceRecordsController::class, 'update_merits'])->name('update_merits');
+        Route::get('update_merits',[UpdateAttendanceRecordsController::class, 'update_merits'])->name('update_merits'); 
         Route::get('update_records',[UpdateAttendanceRecordsController::class, 'update_records'])->name('update_records');
         Route::get('attendances', PlatoonLeaderAttendanceController::class)->name('attendances.index');
-    /** End Attendance Management */
-
-
+        /** End Attendance Management */
     Route::resource('performances', PerformanceController::class);
-
-
-    
 });
 
 // Student
@@ -143,14 +134,11 @@ Route::group(['middleware' => ['auth']],function() {
 
 // Custom Authentication
 Route::group(['as' => 'auth.'], function () {
-
     // Auth Routes
     Route::controller(AuthController::class)->group(function () {
-        
-        Route::get('/otp', 'otp')->name('otp');
         Route::get('/login', 'login')->name('login');
         Route::post('/login', 'attemptLogin')->name('attempt_login');
-        Route::post('/otp', 'attemptotp')->name('attempt_otp');
+        // Route::post('/otp', 'attemptotp')->name('attempt_otp');
         Route::get('/register', 'register')->name('register');
         Route::post('/register', 'attemptRegister')->name('attempt_register');
         Route::post('/logout', 'logout')->name('logout');
@@ -162,7 +150,8 @@ Route::group(['as' => 'auth.'], function () {
 
 
 Auth::routes(['login' => false, 'register' => false, 'logout' => false]);
-
+Route::get('/otp',  [ApiAuthController::class, 'otp'])->name('api.otp');
+Route::post('/otp',  [ApiAuthController::class, 'attemptOtp'])->name('api.attemptOtp');
 // Route::any('request_otp', 
 // function(){
 //     Mail::to('methuselahdanieldoysabas@gmail.com')->send(new sendEmail());

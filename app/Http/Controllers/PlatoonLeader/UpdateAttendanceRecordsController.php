@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Role;
 use App\Models\Student;
 use App\Models\AttendanceRecords;
-
+use App\Models\Otp;
 
 class UpdateAttendanceRecordsController extends Controller
 {
@@ -21,15 +21,16 @@ class UpdateAttendanceRecordsController extends Controller
         if(request()->ajax()) 
         {
             $stud_id = $data->query('student_id');
-            $merits = $data->query('merits');
-            $demerits = $data->query('demerits');
-            $total_points = $data->query('total_points');
-            $percentage = $data->query('percentage');
+            $merits = (int)$data->query('merits');
+            $demerits = (int)$data->query('demerits');
+            $total_points = (int)$merits - (int)$demerits;
+            $percentage = (int)$total_points * 0.3;
             $semester = $data->query('semester');
             $year = $data->query('year');
             $a = [
               'semester'=>$semester,  
               'merits'=>$merits,  
+              'demerits'=>$demerits,  
               'total_points'=>$total_points,  
               'percentage'=>$percentage,  
               'year'=>$year,  
@@ -40,6 +41,9 @@ class UpdateAttendanceRecordsController extends Controller
             return  DataTables::of($student_data_merits)->addIndexColumn()->addColumn('full_day', function ($data) {
                 return $data->student_id.'-'.$data->semester.'-'.$data->merits.'-'.$data->demerits.'-'.$data->total_points
                 .'-'.$data->percentage.'-'.$data->year;
+            })->addColumn('school_years', function ($data) {
+                $year_data = DB::table('school_years')->get();
+                return $year_data;
             })->make(true);
         }    
     }
@@ -51,12 +55,8 @@ class UpdateAttendanceRecordsController extends Controller
             $stud_id = $data->query('student_id');
             $a = [];
             $total_points = 0;
-            // dump($total_points);
             
             foreach ($g as $index => $value) {
-                // dump($value["element"]);
-                // dump($index);
-                // dump($g[$index]);
                 switch ($index) {
                     case 1:
                         if ($value["element"]==1) {
@@ -153,8 +153,10 @@ class UpdateAttendanceRecordsController extends Controller
                 }
             }
             $a["total_points"] = $total_points;
-            $a["average"] = 6.67 * $total_points;
-            $percentage = ($total_points * 0.1) * 30;
+            $cal = $total_points / 15;
+            $a["average"] = $cal * 100;
+            $percentage = $a["average"] * 0.3;
+            $a["percentage_record"] = $percentage;
             DB::table('attendance_records')->where('student_id', $stud_id)->update($a);
 
             $student_data = DB::table('attendance_records')->get();

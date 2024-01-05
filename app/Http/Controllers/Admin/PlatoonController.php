@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use App\Models\Otp;
 use App\Models\Platoon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,6 +12,20 @@ class PlatoonController extends Controller
 {
     public function index()
     {
+        $sdata = Otp::where('userid', auth()->id())->first();
+        $request_data = $sdata["status"] ?? null;
+        if($request_data==null){
+            return redirect('/otp');
+        }else{
+            if($sdata["status"]==0){
+                return redirect('/otp');
+            }
+            // New Session Login still required OTP
+            if(session()->get('is_otp')==null){
+                return redirect('/otp');
+            }
+        }
+        
         if(request()->ajax())
         {
             return DataTables::of(Platoon::all())

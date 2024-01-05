@@ -3,11 +3,18 @@
 @section('title', 'Platoon Leader | Merit and Demerit Records V2')
 
 @section('content')
-
+<style>
+.hide{
+    display:none;
+}
+</style>
     {{-- CONTAINER --}}
     <div class="container-fluid py-4">
         <div class="row justify-content-center">
             <div class="col-md-12">
+                <div id="atn_record_alert" class="alert alert-success hide" role="alert">
+                    {{ __('Successfully Updated Record') }}
+                </div>
                 <div>
                     <div class="card">
                         <div class="card-header">
@@ -92,7 +99,8 @@
 @section('script')
     <script>
         let obj =[{student_id:""}];
-
+        let numc = 0;
+        let sy = 0;
         const list_columns = [
                 {
                     data: "id",
@@ -103,6 +111,7 @@
                 {
                     data: "student_id",
                     render(data) {
+                        numc=data;
                         return data;
                     },
                 },
@@ -115,30 +124,33 @@
                 {
                     data: "full_day",
                     render(data) {
-                        console.log(data);
                         const ar = data.split("-");
-                        return '<input class="form-control" type="number" id="merits-'+ar[0]+'" value="'+ar[2]+'">';
+                        
+                        return '<input class="form-control" type="number" id="merits-'+ar[0]+'" value="'+ar[2]+'"  maxlength="3" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" >';
                     },
                 },
                 {
                     data: "full_day",
                     render(data) {
                         const ar = data.split("-");
-                        return '<input class="form-control" type="number" id="demerits-'+ar[0]+'" value="'+ar[3]+'">';
+                        return '<input class="form-control" type="number" id="demerits-'+ar[0]+'" value="'+ar[3]+'" maxlength="3" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">';
                     },
                 },
                 {
-                    data: "full_day",
+                    data: "total_points",
                     render(data) {
-                        const ar = data.split("-");
-                        return '<input class="form-control" type="number" id="totalpoints-'+ar[0]+'" value="'+ar[4]+'">';
+                        // const ar = data.split("-");
+                        // return ar[4];
+                        // return '<input class="form-control" type="number" id="totalpoints-'+ar[0]+'" value="'+ar[4]+'" maxlength="3" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">';
+                        return data;
                     },
                 },
                 {
-                    data: "full_day",
+                    data: "percentage",
                     render(data) {
-                        const ar = data.split("-");
-                        return '<input class="form-control" type="number" id="percentage-'+ar[0]+'" value="'+ar[5]+'">';
+                        // const ar = data.split("-");
+                        // return ar[5];
+                        return data;
                     },
                 },
                 {
@@ -153,14 +165,26 @@
                             a += '<option value="0" selected>1st Semester</option>';
                             a += '<option value="1" >2nd Semester</option>';
                         }
+                        // semester sy
+                        sy = ar[6];
+
                         return '<select id=semester-'+ar[0]+' class="form-control">'+a+'</select>';
                     },
                 },
                 {
-                    data: "full_day",
+                    data: "school_years",
                     render(data) {
-                        const ar = data.split("-");
-                        return '<input class="form-control" type="text" id="year-'+ar[0]+'" value="'+ar[6]+'">';
+                        const ar = JSON.parse(data);
+                        let a = "";
+                        ar.forEach(element => {
+                            var select_op = ""; 
+                            if(sy==element["id"]){
+                                select_op = "selected"; 
+                            }
+                            a += '<option value='+element["id"]+' '+select_op+' >'+element["school_year"]+'</option>';
+                        });
+                        return '<select id="school_year-'+numc+'" class="form-control">'+a+'</select>';
+                        // return '<input class="form-control" type="text" id="year-'+ar[0]+'" value="'+ar[6]+'">';
                     },
                 },
                 {
@@ -327,17 +351,18 @@
     function update_records(record_id) {
         let get_merits = $("#merits-"+record_id).val();    
         let get_demerits = $("#demerits-"+record_id).val();    
-        let get_totalpoints = $("#totalpoints-"+record_id).val();    
-        let get_percentage = $("#percentage-"+record_id).val();    
-        let get_semester = $("#semester-"+record_id).is(':selected');   
-        let get_year = $("#year-"+record_id).val();    
+        console.log(get_demerits);
+        // let get_totalpoints = $("#totalpoints-"+record_id).val();    
+        // let get_percentage = $("#percentage-"+record_id).val();    
+        let get_semester = $("#semester-"+record_id).val();   
+        let get_year = $("#school_year-"+record_id).val();       
 
         var formData_dem = {
             student_id: record_id,
             merits: get_merits,
             demerits: get_demerits,
-            total_points: get_totalpoints,
-            percentage: get_percentage,
+            // total_points: get_totalpoints,
+            // percentage: get_percentage,
             semester: get_semester,
             year: get_year,
         };
@@ -349,6 +374,10 @@
             null,
             true
         );
+
+        $("#atn_record_alert").delay(1000).fadeIn();
+        $("#atn_record_alert").delay(3000).fadeOut();
+
     }
     </script>
 @endsection
